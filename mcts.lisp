@@ -222,21 +222,21 @@ min-value-index))
      (game acc)
      (cond
        ((game-over? game)
-        c)
+        acc)
        (t
         (let ((key (make-hash-key-from-game game))
-              (hashy (mc-tree-hashy tree))
-              (mv-index (select-move nodey c)))
+              (hashy (mc-tree-hashy tree)))
           (myltiple-value-bind
            (nodey intree-p)
            (gethash key hashy)
-           (if intree-p
-             (sim-tree-acc
-              (do-move! game (svref (mc-node-veck-moves nodey) mv-index))
-              (append c (list key mv-index)))
-             (progn
-              (insert-new-node game tree key)
-              (append c (list key mv-index))))))))))
+           (let ((mv-index (select-move nodey c)))
+             (if intree-p
+               (sim-tree-acc
+                (apply #'do-move! game nil (svref (mc-node-veck-moves nodey) mv-index))
+                (append c (list key mv-index)))
+               (progn
+                (insert-new-node game tree key)
+                (append c (list key mv-index)))))))))))
    (sim-tree-acc game nil)))
 
 ;;  SIM-DEFAULT -- defined for you!
