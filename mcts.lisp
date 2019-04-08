@@ -226,17 +226,17 @@ min-value-index))
        (t
         (let ((key (make-hash-key-from-game game))
               (hashy (mc-tree-hashy tree)))
-          (myltiple-value-bind
+          (multiple-value-bind
            (nodey intree-p)
            (gethash key hashy)
            (let ((mv-index (select-move nodey c)))
              (if intree-p
                (sim-tree-acc
                 (apply #'do-move! game nil (svref (mc-node-veck-moves nodey) mv-index))
-                (append c (list key mv-index)))
+                (append acc (list key mv-index)))
                (progn
                 (insert-new-node game tree key)
-                (append c (list key mv-index)))))))))))
+                (append acc (list key mv-index)))))))))))
    (sim-tree-acc game nil)))
 
 ;;  SIM-DEFAULT -- defined for you!
@@ -307,14 +307,14 @@ min-value-index))
         (backup (mc-tree-hashy tree) key-move-acc result)))
      (let*
        ((root-node (get-root-node tree))
-        (best-move-index (selselect-move root-node c))
+        (best-move-index (select-move root-node c))
         (best-move (svref (mc-node-veck-moves root-node) best-move-index))
         (veck-scores (mc-node-veck-scores root-node)))
        (progn
         (when *verbose*
           (format t "Best score: ~A score veck: ~A,~%Visits veck ~A"
                   (svref veck-scores best-move-index)
-                  (veck-scores)
+                  veck-scores
                   (mc-node-veck-visits root-node)))
         best-move)))))
 
